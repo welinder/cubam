@@ -1,5 +1,5 @@
 from BinaryModel import *
-from numpy import sign, ones, log10, nonzero, flipud, diag
+from numpy import ones, log10, nonzero, flipud, diag
 from numpy.random import multinomial
 from scipy.stats import beta
 
@@ -57,7 +57,7 @@ class BinaryBiasModel(BinaryModel):
 
     def _setup_prior(self):
         n = self.mdlPrm['res']
-        ajs = linspace(0., 1., n)
+        ajs = linspace(1e-10, 1.-1e-10, n)
         aj0, aj1 = meshgrid(ajs, ajs); aj0=aj0.flatten(); aj1=aj1.flatten()
         prior = zeros( len(aj0) )
         for prm in self.mdlPrm['priorPrm']:

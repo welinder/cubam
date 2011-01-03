@@ -44,7 +44,7 @@ def tw2tsw(tj, wj):
     ###########################################################################
 ### DATA GENERATION, WRITING, READING
 ###########################################################################
-def normalize_data_file(filename, outpfx, skipfirst=False):
+def normalize_data_file(filename, outpfx, skipFirst=False):
     """
     Normalizes a data file so that workers and images are indexed from 0.
     
@@ -65,7 +65,7 @@ def normalize_data_file(filename, outpfx, skipfirst=False):
     - `skipFirst`: [False] skip the first line of the input file.
     """
     # summarize input file
-    imgIds, wkrId, numLbls = {}, {}, 0
+    imgIds, wkrIds, numLbls = {}, {}, 0
     infile = open(filename, 'r')
     if skipFirst: infile.readline() # skip first line
     for line in infile:
@@ -76,7 +76,7 @@ def normalize_data_file(filename, outpfx, skipfirst=False):
     # write new file
     outfile = open("%s.txt" % outpfx, 'w')
     outfile.write("%d %d %d\n" % (len(imgIds), len(wkrIds), numLbls))
-    infile = open(infn, 'r')
+    infile = open(filename, 'r')
     infile.readline()
     for line in infile:
         imgId, wkrId, label = [int(col) for col in line.rstrip().split(" ")]

@@ -1,4 +1,4 @@
-import yaml
+import yaml, pickle
 import numpy as np
 from scipy.stats import pearsonr, spearmanr
 from tempfile import mkstemp
@@ -41,7 +41,8 @@ def tw2tsw(tj, wj):
     wj1 = np.array(wj)*sj
     tj1 = tj*sj
     return (tj1, sj, wj1)
-    ###########################################################################
+
+###########################################################################
 ### DATA GENERATION, WRITING, READING
 ###########################################################################
 def normalize_data_file(filename, outpfx, skipFirst=False):
@@ -186,6 +187,21 @@ def sample_labels(model, wkrs, imgs):
     labels = [[ii, wi, model.sample_label(wkrs[wi], imgs[ii])] \
               for ii in range(len(imgs)) for wi in range(len(wkrs))]
     return labels
+
+def save_param_file(prm, filename):
+    """
+    Saves a parameter dictionary as a filename.
+    """
+    f = open(filename, 'w')
+    pickle.dump(prm, f)
+    f.close()
+
+def load_param_file(filename):
+    """
+    Loads a saved parameter dictionary from filename.
+    """
+    return pickle.load(open(filename))
+
 
 ###########################################################################
 ### BENCHMARKING

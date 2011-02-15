@@ -228,7 +228,7 @@ def subsample_datafile(filename, tarDir, numTrials, annPerImg, gt=None,
         if len(line)==0: continue
         fn, wkrId, label = line.split(' ')
         if not imgLabels.has_key(fn): imgLabels[fn] = []
-        imgLabels.append((wkrId, int(label)))
+        imgLabels[fn].append((wkrId, int(label)))
     # create a filename -> idx mapping (since we need zero-indexed files)
     imgFnToIdx = dict((fn, id) for (id, fn) in enumerate(imgLabels.keys()))
     # reformat ground truth
@@ -247,8 +247,9 @@ def subsample_datafile(filename, tarDir, numTrials, annPerImg, gt=None,
         # subsample the labels for current trial
         for (fn, labels) in imgLabels.iteritems():
             imgIdx = imgFnToIdx[fn]
-            selected = np.random.permutation(labels)[:annPerImg]
-            for (wkrId, label) in selected:
+            selectedInds = np.random.permutation(len(labels))[:annPerImg]
+            for selectedIdx in selectedInds:
+                wkrId, label = labels[selectedIdx]
                 if not wkrIdToIdx.has_key(wkrId):
                     wkrIdToIdx[wkrId] = len(wkrIdToIdx)
                 labelList.append((imgIdx, wkrIdToIdx[wkrId], label))

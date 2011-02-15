@@ -1,4 +1,4 @@
-import yaml, pickle
+import yaml, pickle, os
 import numpy as np
 from scipy.stats import pearsonr, spearmanr
 from tempfile import mkstemp
@@ -202,6 +202,78 @@ def load_param_file(filename):
     """
     return pickle.load(open(filename))
 
+###########################################################################
+### SAMPLING OF REAL DATA
+###########################################################################
+def subsample_datafile(filename, tarDir, numTrials, annPerImg, gt=None,
+                       verbose=True):
+    """
+    Sub-samples image annotations for some datafile.
+    This assumes the format of the data file is the following:
+    {image filename} {worker id} {label=0/1}
+
+    Inputs:
+    - filename: filename of the input datafile
+    - tarDir: target directory for the subsampled data
+    - numTrials: number of sub-sample trials
+    - annPerImg: number of annotators that annotate image
+
+    Outputs:
+    - list of filenames to 'labels', 'gt' and 'mapping' (list of dicts)
+    """
+    # build a representation for all the data
+    imgLabels = {}
+    for line in open(filename):
+        line = line.rstrip()
+        if len(line)==0: continue
+        fn, wkrId, label = line.split(' ')
+        if not imgLabels.has_key(fn): imgLabels[fn] = []
+        imgLabels.append((wkrId, int(label)))
+    # create a filename -> idx mapping (since we need zero-indexed files)
+    imgFnToIdx = dict((fn, id) for (id, fn) in enumerate(imgLabels.keys()))
+    # reformat ground truth
+    if not gt is None:
+        gt = dict((imgFnToIdx[fn], gt[fn]) for fn in imgFnToIdx.keys())
+    # ensure output directory exists
+    if not os.path.exists(tarDir): os.makedirs(tarDir)
+    # subsample the labels
+    if verbose: print "Sub-sampling labels"
+    fileList = []
+    for t in range(numTrials):
+        if verbose: print "- trial %d/%d" % (t+1, numTrials)
+        prefix = '%s/trial-%02d' % (tarDir, t)
+        wkrIdToIdx = {}
+        labelList = []
+        # subsample the labels for current trial
+        for (fn, labels) in imgLabels.iteritems():
+            imgIdx = imgFnToIdx[fn]
+            selected = np.random.permutation(labels)[:annPerImg]
+            for (wkrId, label) in selected:
+                if not wkrIdToIdx.has_key(wkrId):
+                    wkrIdToIdx[wkrId] = len(wkrIdToIdx)
+                labelList.append((imgIdx, wkrIdToIdx[wkrId], label))
+        # write the label file
+        labelFile = open(prefix + '-labels.txt', 'w')
+        labelFile.write('%d %d %d\n' % (len(imgLabels), len(wkrIdToIdx),
+                                        len(labelList)))
+        for row in labelList:
+            labelFile.write('%d %d %d\n' % row)
+        labelFile.close()
+        # write ground truth if exists
+        if not gt is None:
+            yaml.dump(gt, open(prefix+'-gt.yaml', 'w'))
+        # write the mapping
+        mapping = { 'images' : imgFnToIdx, 'workers' : wkrIdToIdx }
+        yaml.dump(mapping, open(prefix+'-mapping.yaml', 'w'))
+        # add file information
+        fileInfo = {
+            'labels' : 'trial-%02d-labels.txt' % t,
+            'gt' : 'trial-%02d-gt.yaml' % t,
+            'mapping' : 'trial-%02d-mapping.yaml' % t,
+        }
+        fileList.append(fileInfo)
+    return fileList
+    
 
 ###########################################################################
 ### BENCHMARKING

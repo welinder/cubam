@@ -1,7 +1,15 @@
+"""
+This script simulates different numbers of workers and compares majority
+voting against the NIPS 2010 model and a variant of the Dawid & Skene method.
+
+You should just be able to run it:
+
+  python synthetic.py
+
+"""
 import sys, os, pickle
 from numpy import random, mean, std, sqrt
 from matplotlib.pylab import figure
-
 
 sys.path.append("../install")
 from cubam import Binary1dSignalModel, BinaryBiasModel
@@ -11,11 +19,7 @@ from cubam.utils import generate_data, save_param_file, load_param_file, \
 ############################################################################
 # TASKS
 ############################################################################
-tasks = ['gen-data']
-tasks = ['gen-data','run-models']
-tasks = ['run-models']
-tasks = ['show-results']
-#tasks = ['gen-data','run-models','show-results']
+tasks = ['gen-data','run-models','show-results']
 
 ############################################################################
 # DEMO PARAMETERS
@@ -81,22 +85,7 @@ if task in tasks:
             gxi = getParameter(prm['img'], 0)
             gzi = [gxi[id] > 0. for id in range(dinfo['numImg'])]
             # Binary Signal Model
-            # mdlPrm = { 
-            #     'beta' : 0.5,
-            #     'sigx' : 3.,
-            #     'sigw' : 3.,
-            #     'muw' : 1.,
-            #     'sigt' : 6.
-            # }
-            mdlPrm = { 
-                'beta' : 0.5,
-                'sigx' : 2.,
-                'sigw' : 3., #10
-                'muw' : 1., #2
-                'sigt' : 10.
-            }
             m = Binary1dSignalModel(filename=dfile)
-            m.set_model_param(prm=mdlPrm)
             m.optimize_param()
             exi = getParameter(m.get_image_param(), 0)
             comperr = lambda ez: float(sum([ez[id]!=gzi[id] for id \
@@ -124,7 +113,7 @@ if task in tasks:
 task = 'show-results'
 if task in tasks:
     errRates = pickle.load(open(rateFile))
-    exps = [('signal', 'ours'), ('majority', 'majority'), ('bias', '[1]')]
+    exps = [('signal', 'NIPS 2010'), ('majority', 'majority'), ('bias', 'Dawid & Skene')]
     numWkrList = sorted(errRates[exps[0][0]].keys())
     fig = figure(1, (5.5,3)); fig.clear(); ax = fig.add_subplot(1,1,1)
     for (expt, legname) in exps:
@@ -133,9 +122,9 @@ if task in tasks:
         ax.errorbar(numWkrList, rates, yerr=erbs, label=legname, lw=3)
     ax.set_xlabel('number of annotators', fontsize=16)
     ax.set_ylabel('error rate', fontsize=16)
-    ax.set_title('(c) synthetic annotator data', fontsize=18)
+    ax.set_title('synthetic annotator data', fontsize=18)
     ax.set_xlim(2, 22)
-    ax.set_ylim(0.02, .12)
+    ax.set_ylim(0.0, .12)
     ax.set_xticks([4, 8, 12, 16, 20])
     ax.legend(loc=1)
     fig.savefig('%s-results.pdf' % resDir)

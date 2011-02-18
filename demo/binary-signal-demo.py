@@ -1,3 +1,7 @@
+"""
+This script shows how the NIPS 2010 model estimates the parameters of
+synthetic data.
+"""
 import os, sys, pickle
 from numpy import random
 from matplotlib.pylab import figure
@@ -10,8 +14,6 @@ from cubam.utils import generate_data
 # TASKS
 ############################################################################
 tasks = ['gen-data', 'run-model', 'show-results']
-#tasks = ['gen-data', 'run-model']
-tasks = ['show-results']
 
 ############################################################################
 # DEMO PARAMETERS
@@ -46,9 +48,9 @@ task = 'run-model'
 if task in tasks:
     print "Running Model..."
     model.load_data('%s.txt' % filePrefix)
-    model.set_model_param(prm={
-        'muw' : 2.0, 'sigt' : 10.0, 'sigw' : 10.0, 'sigx' : 2.0,
-    })
+#    model.set_model_param(prm={
+#        'muw' : 2.0, 'sigt' : 10.0, 'sigw' : 10.0, 'sigx' : 2.0,
+#    })
     model.optimize_param()
     eprm = { 'wkr' : model.get_worker_param(), 
              'img' : model.get_image_param() }

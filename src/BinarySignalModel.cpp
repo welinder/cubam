@@ -2,10 +2,10 @@
 
 BinarySignalModel::BinarySignalModel() {
   mBeta = 0.5;
-  mSigX = 2.0;
-  mSigW = 10.0;
-  mMuW = 2.0;
-  mSigT = 10.0;
+  mSigX = 0.8;
+  mSigW = 1.0;
+  mMuW = 1.0;
+  mSigT = 3.0;
   mXis = 0;
   mWjs = 0;
   mTjs = 0;

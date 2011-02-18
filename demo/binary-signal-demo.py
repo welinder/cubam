@@ -2,11 +2,10 @@
 This script shows how the NIPS 2010 model estimates the parameters of
 synthetic data.
 """
-import os, sys, pickle
+import os, pickle
 from numpy import random
 from matplotlib.pylab import figure
 
-sys.path.append("../install")
 from cubam import Binary1dSignalModel
 from cubam.utils import generate_data
 

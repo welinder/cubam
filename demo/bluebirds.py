@@ -8,11 +8,10 @@ You should just be able to run it:
   python bluebirds.py
 
 """
-import sys, os, pickle, yaml
+import os, pickle, yaml
 from numpy import random, mean, std, sqrt
 from matplotlib.pylab import figure
 
-sys.path.append("../install")
 from cubam import Binary1dSignalModel, BinaryBiasModel
 from cubam.utils import majority_vote, read_data_file
 

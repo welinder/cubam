@@ -7,11 +7,10 @@ You should just be able to run it:
   python synthetic.py
 
 """
-import sys, os, pickle
+import os, pickle
 from numpy import random, mean, std, sqrt
 from matplotlib.pylab import figure
 
-sys.path.append("../install")
 from cubam import Binary1dSignalModel, BinaryBiasModel
 from cubam.utils import generate_data, save_param_file, load_param_file, \
      majority_vote, read_data_file

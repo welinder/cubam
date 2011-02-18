@@ -13,6 +13,9 @@ You can install it as a Python package by running:
 
     python setup.py install
 
+# Trying it out #
+
+Try the scripts in the `demo/` directory.
 
 # Install into cubam root directory #
 

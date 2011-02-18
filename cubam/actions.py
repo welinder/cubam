@@ -3,17 +3,17 @@ Contains functions that make use of the classes to produce label estimates.
 """
 import yaml, os
 from Binary1dSignalModel import Binary1dSignalModel
-from BinaryBias import BinaryBias
+from BinaryBiasModel import BinaryBiasModel
 from MajorityModel import MajorityModel
 
 def run_model_on_file(modelName, filename=None, modelPrm=None, optimizePrm=None,
                       outputPrefix=None):
     # load model
-    if modelName == 'Binary1dSignal':
+    if modelName == 'signal':
         m = Binary1dSignalModel(filename=filename)
-    elif modelName == 'BinaryBias':
-        m = BinaryBias(filename=filename)
-    elif modelName == 'MajorityModel':
+    elif modelName == 'bias':
+        m = BinaryBiasModel(filename=filename)
+    elif modelName == 'majority':
         m = MajorityModel(filename=filename)
     else:
         assert False, "Invalid model"
@@ -28,13 +28,13 @@ def run_model_on_file(modelName, filename=None, modelPrm=None, optimizePrm=None,
     # convert lists to dictionaries
     imgPrm = m.get_image_param()
     if type(imgPrm)==type(list()):
-        imgPrm = [(i, p) for (i, p) in enumerate(imgPrm)]
-    labels = m.get_image_labels()
+        imgPrm = dict((i, p) for (i, p) in enumerate(imgPrm))
+    labels = m.get_labels()
     if type(labels)==type(list()):
-        labels = [(i, p) for (i, p) in enumerate(labels)]
+        labels = dict((i, p) for (i, p) in enumerate(labels))
     wkrPrm = m.get_worker_param()
     if type(wkrPrm)==type(list()):
-        wkrPrm = [(i, p) for (i, p) in enumerate(wkrPrm)]
+        wkrPrm = dict((i, p) for (i, p) in enumerate(wkrPrm))
     # save predictions
     if not outputPrefix is None:
         dirName = os.path.dirname(outputPrefix)

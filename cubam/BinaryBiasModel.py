@@ -114,12 +114,15 @@ class BinaryBiasModel(BinaryModel):
     def get_image_param_raw(self):
         return [p[0] for p in self.imgPrm]
 
-    def get_worker_param(self, id):
-        pass
+    def get_worker_param(self, id=None):
+        return self.wkrPrm
 
-    def get_image_param(self, id):
-        pass
+    def get_image_param(self, id=None):
+        return self.imgPrm
 
+    def get_labels(self):
+        return [int(p[0]>0.5) for p in self.imgPrm]
+    
     # TODO: load and save parameters
 
     def optimize_worker_param(self):

@@ -27,17 +27,19 @@ class MajorityModel(BinaryModel):
         self.numLbls = int(info[2])
         self.numWkrs = int(info[1])
         self.numImgs = int(info[0])
-        self.imgPrm = [[0, 0]]*self.numImgs # (frac +ve votes, total n votes)
+        self.imgPrm = []
+        for i in range(self.numImgs):
+            self.imgPrm.append([0, 0]) # (frac +ve votes, total n votes)
         self.wkrLbls = dict((id, []) for id in range(self.numWkrs))
         self.imgLbls = dict((id, []) for id in range(self.numImgs))
         self.labels = []
         for (lino, line) in enumerate(filein):
             cols = [int(c) for c in line.rstrip().split(' ')]
-            iId = cols[0]; wId = cols[1]; lij = cols[2]==1
+            iId = cols[0]; wId = cols[1]; lij = int(cols[2]==1)
             self.wkrLbls[wId].append([iId, lij])
             self.imgLbls[iId].append([wId, lij])
             self.labels.append((iId, wId, lij))
-            self.imgPrm[iId][0] += int(label)
+            self.imgPrm[iId][0] += lij
             self.imgPrm[iId][1] += 1
         # renormalize img prm
         for i in range(len(self.imgPrm)):
@@ -79,18 +81,19 @@ class MajorityModel(BinaryModel):
     def get_image_param_raw(self):
         return [p for p in self.imgPrm]
 
-    def get_worker_param(self, id):
+    def get_worker_param(self, id=None):
         return {}
 
-    def get_image_param(self, id):
+    def get_image_param(self, id=None):
         return [p for p in self.imgPrm]
 
     def get_labels(self):
         if self.mdlPrm['addNoise']:
             return [int((self.imgPrm[i][0]+(rand()-.5)/self.imgPrm[i][1])>.5)\
-                        for i in range(self.imgPrm)]
+                        for i in range(len(self.imgPrm))]
         else:
-            return [int(self.imgPrm[i][0]>.5) for i in range(self.imgPrm)]
+            return [int(self.imgPrm[i][0]>.5) for i \
+                    in range(len(self.imgPrm))]
 
     # TODO: load and save parameters
 

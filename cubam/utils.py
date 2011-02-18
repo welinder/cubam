@@ -309,3 +309,16 @@ def error_rates(exi, gxi):
     # miss rate
     mr = float(sum(est[gt==True]==False))/sum(gt==True)
     return [er, far, mr]
+
+def compute_error(est, gt):
+    """
+    Given a list or dictionary of estimated labels and ground truth, this
+    function computes the total error rate.
+    """
+    if type(est)==type(dict()):
+        est = [est[k] for k in sorted(est.keys())]
+    if type(gt)==type(dict()):
+        gt = [gt[k] for k in sorted(gt.keys())]
+    assert len(gt)==len(est), "Estimates and ground truth must be of same size"
+    numErrs = sum([int(gt[i]!=est[i]) for i in range(len(est))])
+    return float(numErrs)/len(est)

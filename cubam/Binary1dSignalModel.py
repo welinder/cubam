@@ -123,3 +123,8 @@ class Binary1dSignalModel(BinaryModel):
     Converts from the (tj, sj, wj) convention to (tj, wj).
     """
     return (tj/sj, 1./sj*wj)
+
+  def get_labels(self):
+    prm = self.get_image_param_raw()
+    return dict((id, int(prm[id]>0.0)) for id in range(len(prm)))
+

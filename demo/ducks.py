@@ -7,9 +7,10 @@ You should just be able to run it:
   python ducks.py
 
 """
-import yaml
+import yaml, sys
 from numpy import array, random
 from matplotlib.pylab import figure
+sys.path.append('..')
 from cubam import BinaryNdSignalModel
 
 ############################################################################

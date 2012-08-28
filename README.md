@@ -25,6 +25,6 @@ If you don't want to install it for your system, you can install it into an `ins
 
 # Copyright and Licence #
 
-This software is licensed under the Clear-BSD license.
+This software is licensed under the Clear-BSD license. See `LICENSE.TXT`
 
-Copyright (c) 2011-2012 Peter Welinder
+Copyright (c) 2011-2012 Peter Welinder, Caltech.

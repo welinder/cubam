@@ -22,3 +22,9 @@ Try the scripts in the `demo/` directory.
 If you don't want to install it for your system, you can install it into an `install` directory in the CUBAM root.
 
     python setup.py install --install-purelib install --install-platlib install
+
+# Copyright and Licence #
+
+This software is licensed under the Clear-BSD license.
+
+Copyright (c) 2011-2012 Peter Welinder

@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include <fstream>
 #include <cstdio>
+#include <cstring>
 #include "utils.hpp"
 
 #include "BinaryModel.hpp"
